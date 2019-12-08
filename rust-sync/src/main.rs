@@ -1,19 +1,37 @@
-// let hex = hasher.result_str();
+use sha2::{Digest, Sha512};
+use std::fs::File;
+use std::io;
 
-//assert_eq!(hex,
-  //         concat!("b94d27b9934d3e08a52e52d7da7dabfa",
-    //               "c484efe37a5380ee9088f7ace2efcde9"));
-      //             }
-
-
-//extern crate crypto;
-
-//use crypto::digest::Digest;
-//use crypto::sha2::Sha256;
-use sha2::{Sha256, Sha512, Digest};
 fn main() {
-    let input = "Hello world!";
-    let mut sha = Sha256::new();
-    sha.input_str(input);
-    println!("{}", sha.result_str());
+    let stringToHash = "Hello World!\n";
+    hashString(stringToHash);
+    //println!("{:x}", sha.result());
+}
+
+fn hashFile(filePath: &str) {
+    let mut f = File::open(&filePath);
+    let mut f = match f {
+        Ok(file) => file,
+        Err(error) => panic!("Problem opening the file: {:?}", error),
+    };
+
+    let mut sha = Sha512::new();
+    let n = io::copy(&mut f, &mut sha).expect("error");
+    // Note that calling `result()` consumes hasher
+    let hash = sha.result();
+    println!("Path: {}", filePath);
+    println!("Bytes processed: {}", n);
+    println!("Hash value: {:x}", hash);
+    //return hash;
+}
+
+fn hashString(datatohash: &str) {
+    //-> [u8; 64] {
+    let mut sha = Sha512::new();
+    sha.input(datatohash);
+    // Note that calling `result()` consumes hasher
+    let hash = sha.result();
+    println!("{:x}", hash);
+    //let res: [u8; 64] = sha.result().into()
+    //return hash;
 }

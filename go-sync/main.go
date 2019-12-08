@@ -1,7 +1,7 @@
 package main
 
 import (
-	"crypto/sha256"
+	"crypto/sha512"
 	"fmt"
 	"io"
 	"log"
@@ -9,16 +9,30 @@ import (
 )
 
 func main() {
-	f, err := os.Open("test-files/file.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer f.Close()
+stringToHash := "Hello World!\n"	
+//hashFile()
+hashString(stringToHash)
+}
 
-	h := sha256.New()
-	if _, err := io.Copy(h, f); err != nil {
-		log.Fatal(err)
-	}
+func hashFile(){
+f, err := os.Open("test-files/file.txt")
+if err != nil {
+	log.Fatal(err)
+}
+defer f.Close()
 
+h := sha512.New()
+if _, err := io.Copy(h, f); err != nil {
+	log.Fatal(err)
+}
+// Print hash
+fmt.Printf("%x", h.Sum(nil))
+}
+// hashString will hash the string passed in
+func hashString(stringToHash string){
+	h := sha512.New()
+	h.Write([]byte(stringToHash))
+	// Print Hash
 	fmt.Printf("%x", h.Sum(nil))
+
 }

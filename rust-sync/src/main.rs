@@ -5,7 +5,7 @@ use std::io;
 fn main() {
     let stringToHash = "Hello World!\n";
     hashString(stringToHash);
-    //println!("{:x}", sha.result());
+    hashFile("../test-files/file.txt")
 }
 
 fn hashFile(filePath: &str) {
